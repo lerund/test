@@ -1,0 +1,39 @@
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply from: "webdriver.gradle"
+
+repositories {
+    mavenCentral()
+}
+
+defaultTasks 'testChrome'
+
+dependencies { 
+ 	testImplementation 'org.testng:testng:7.6.1'
+
+    implementation "org.seleniumhq.selenium:selenium-remote-driver:4.19.1"
+    implementation "org.seleniumhq.selenium:selenium-java:4.19.1"
+    implementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.19.1'
+    implementation 'io.github.bonigarcia:webdrivermanager:5.8.0'
+    testImplementation 'io.rest-assured:rest-assured:4.4.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+
+}
+
+test {
+    // enable TestNG support (default is JUnit)
+    useTestNG()
+
+    //Show full exception on failure
+    testLogging {
+        exceptionFormat = 'full'
+    }
+
+    //Convenience .. pipe all test results to SDOUT
+    afterTest { desc, result ->
+        println "${desc.className} ${desc.name} ${result.resultType}"
+    }
+
+    //Force tests to always run, even if they haven't been updated
+    outputs.upToDateWhen { false }
+}
